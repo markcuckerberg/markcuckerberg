@@ -286,324 +286,123 @@
 <body>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
-<!--  STORY DATA — edit everything inside window.STORY          -->
+<!--  STORY DATA — fill in your own content below               -->
 <!-- ═══════════════════════════════════════════════════════════ -->
+<!--
+  QUICK REFERENCE
+  ───────────────
+  title       : Displayed in the header.
+  stats       : Key/value pairs tracked across the whole story.
+                Each choice can adjust them via statDeltas.
+  scenes      : Object of scene objects, keyed by a unique id string.
+                The engine always starts at the scene with id "start".
+
+  SCENE FIELDS
+  ────────────
+  chapter     : Small label shown above the heading (e.g. "Chapter 1").
+  icon        : Emoji shown in the scene banner.
+  heading     : Bold scene title.
+  text        : HTML string — wrap paragraphs in <p>...</p>.
+  choices     : Array of choice objects (see below).
+                Leave as [] for an ending scene.
+  ending      : "good" | "mixed" | "bad"  — marks this scene as a terminal ending.
+  endingNote  : Text shown in the coloured outcome box on ending scenes.
+
+  CHOICE FIELDS
+  ─────────────
+  text        : The choice label shown on the button.
+  hint        : (optional) Smaller sub-text beneath the label.
+  tag         : "bold" | "clever" | "kind" | "danger" — colours the letter badge.
+  goto        : id of the scene to navigate to when this choice is picked.
+  statDeltas  : (optional) { statName: number } — adjusts stats on pick.
+-->
 <script>
 window.STORY = {
-  title: "The Forgotten Signal",
+  title: "Your Story Title",
 
-  // Global stats tracked across the story (name → starting value)
+  // ── Stats tracked across the story ──────────────────────────
+  // Add, remove, or rename these as needed.
   stats: {
-    courage:  0,
-    trust:    0,
-    choices:  0
+    // example_stat: 0,
   },
 
-  // Each scene has: id, chapter, icon, heading, text, choices[]
-  // Each choice has: text, hint (optional), tag, goto, statDeltas (optional)
+  // ── Scenes ──────────────────────────────────────────────────
+  // The engine starts at the scene with id "start".
   scenes: {
 
-    // ── ACT 1 ────────────────────────────────────────────────────
     "start": {
-      chapter: "Act I — Arrival",
-      icon: "🌌",
-      heading: "A Signal from the Dark",
-      text: `<p>It's 2:17 AM when your radio crackles to life. Through the static comes a pattern—
-             unmistakably deliberate. Three short, three long, three short. Repeated. Insistent.</p>
-             <p>You're alone at the remote listening station, sixty miles from the nearest town.
-             Your colleague Mara left hours ago. The signal is coming from Grid 7, a sector
-             flagged as empty in every map you own.</p>`,
+      chapter: "Chapter 1",
+      icon: "📖",
+      heading: "Scene Heading",
+      text: `<p>Your opening scene text goes here.</p>`,
       choices: [
         {
-          text: "Trace the signal immediately",
-          hint: "Head out into the dark alone.",
+          text: "First choice",
+          hint: "Optional hint text.",
           tag: "bold",
-          goto: "trace_alone",
-          statDeltas: { courage: 2 }
+          goto: "scene_two"
+          // statDeltas: { example_stat: 1 }
         },
         {
-          text: "Call Mara before doing anything",
-          hint: "Two heads are better than one.",
-          tag: "kind",
-          goto: "call_mara",
-          statDeltas: { trust: 2 }
-        },
-        {
-          text: "Log the signal and wait for dawn",
-          hint: "Patience can be its own strategy.",
+          text: "Second choice",
+          hint: "Optional hint text.",
           tag: "clever",
-          goto: "wait_dawn",
-          statDeltas: { courage: -1 }
+          goto: "scene_three"
         }
       ]
     },
 
-    "trace_alone": {
-      chapter: "Act I — Arrival",
+    "scene_two": {
+      chapter: "Chapter 1",
       icon: "🔦",
-      heading: "Into Grid 7",
-      text: `<p>You grab your torch and a handheld receiver. The forest swallows the path quickly.
-             Pine needles muffle every sound except the steady beep guiding you deeper.</p>
-             <p>After twenty minutes you find it: a weather-beaten emergency beacon, partly buried
-             under a fallen oak. Beside it, a canvas bag. Inside the bag—a journal and a
-             photograph of a woman you recognise from the missing-persons board at the station.</p>`,
+      heading: "Scene Two Heading",
+      text: `<p>Scene two text goes here.</p>`,
       choices: [
         {
-          text: "Take the journal back for analysis",
-          hint: "Evidence is best handled carefully.",
-          tag: "clever",
-          goto: "journal_careful",
-          statDeltas: { trust: 1 }
-        },
-        {
-          text: "Read the journal right here, right now",
-          hint: "Urgency over protocol.",
-          tag: "bold",
-          goto: "journal_now",
-          statDeltas: { courage: 1 }
-        }
-      ]
-    },
-
-    "call_mara": {
-      chapter: "Act I — Arrival",
-      icon: "📡",
-      heading: "Mara Picks Up",
-      text: `<p>Her voice is groggy but alert the moment you describe the signal. "SOS on that
-             frequency? That's the old ranger band. Nobody's used it in fifteen years."</p>
-             <p>She promises to be there in forty minutes. But forty minutes feels like a
-             very long time right now.</p>`,
-      choices: [
-        {
-          text: "Wait for Mara — don't touch anything",
-          hint: "Trust the plan.",
+          text: "Continue",
           tag: "kind",
-          goto: "wait_mara",
-          statDeltas: { trust: 2 }
-        },
-        {
-          text: "Start a preliminary sweep of Grid 7 before she arrives",
-          hint: "A head start can't hurt.",
-          tag: "bold",
-          goto: "trace_alone",
-          statDeltas: { courage: 1 }
+          goto: "ending_good"
         }
       ]
     },
 
-    "wait_dawn": {
-      chapter: "Act I — Arrival",
-      icon: "🌅",
-      heading: "First Light",
-      text: `<p>You log the signal with timestamps and fall into an uneasy sleep on the station couch.
-             At 6:04 AM you wake to silence — the signal is gone. But your log shows it ran
-             for exactly three hours and seventeen minutes.</p>
-             <p>Mara arrives for her shift and sees your notes immediately. "This pattern," she says,
-             pressing a finger to the page, "matches a distress protocol from a 2009 expedition
-             that was never officially closed."</p>`,
-      choices: [
-        {
-          text: "Research the 2009 expedition together",
-          hint: "Knowledge is power.",
-          tag: "clever",
-          goto: "research_together",
-          statDeltas: { trust: 2, courage: 1 }
-        },
-        {
-          text: "Drive out to Grid 7 now — armed with the log",
-          hint: "Evidence in hand, move fast.",
-          tag: "bold",
-          goto: "trace_alone",
-          statDeltas: { courage: 2 }
-        }
-      ]
-    },
-
-    // ── ACT 2 ────────────────────────────────────────────────────
-    "journal_careful": {
-      chapter: "Act II — The Truth Unravels",
-      icon: "📓",
-      heading: "Back at the Station",
-      text: `<p>Under the desk lamp the journal pages glow. The handwriting is cramped but legible:
-             field notes, coordinates, a recurring name — <em>Elara</em>. The final entry
-             reads: <em>"They found the cache. I've hidden the key where the signal dies."</em></p>
-             <p>Mara arrives. When she sees the journal her face goes pale. "That's my sister's
-             handwriting," she whispers.</p>`,
-      choices: [
-        {
-          text: "Tell Mara everything you know",
-          hint: "Full transparency, regardless of consequences.",
-          tag: "kind",
-          goto: "tell_mara",
-          statDeltas: { trust: 3 }
-        },
-        {
-          text: "Withhold the final entry — protect her until you know more",
-          hint: "Kindness through concealment.",
-          tag: "danger",
-          goto: "withhold_entry",
-          statDeltas: { trust: -1, courage: 1 }
-        }
-      ]
-    },
-
-    "journal_now": {
-      chapter: "Act II — The Truth Unravels",
+    "scene_three": {
+      chapter: "Chapter 1",
       icon: "🌲",
-      heading: "Reading in the Dark",
-      text: `<p>Your torchlight shakes as you turn the damp pages. The writer — someone named Elara —
-             describes being followed. The final entry is dated three weeks ago: <em>"If you're
-             reading this, trust no one from the Holloway group. Get the coordinates to someone
-             outside."</em></p>
-             <p>A branch snaps. You are not alone in Grid 7.</p>`,
+      heading: "Scene Three Heading",
+      text: `<p>Scene three text goes here.</p>`,
       choices: [
         {
-          text: "Hide and observe who's coming",
-          hint: "Information before action.",
-          tag: "clever",
-          goto: "hide_observe",
-          statDeltas: { courage: 1 }
-        },
-        {
-          text: "Call out — demand to know who's there",
-          hint: "Boldness can disarm.",
-          tag: "bold",
-          goto: "call_out",
-          statDeltas: { courage: 2, trust: -1 }
+          text: "Continue",
+          tag: "danger",
+          goto: "ending_bad"
         }
       ]
     },
 
-    "wait_mara": {
-      chapter: "Act II — The Truth Unravels",
-      icon: "🚗",
-      heading: "Mara Arrives",
-      text: `<p>Her headlights sweep the clearing at 3:02 AM. You brief her in the car. Without
-             hesitation she says: "Grid 7 is where my sister went missing."</p>
-             <p>Together you hike to the source. The emergency beacon blinks steadily, half-buried
-             under a fallen oak. Next to it: a canvas bag. A journal. A photo of Elara.</p>`,
-      choices: [
-        {
-          text: "Let Mara lead — it's her sister",
-          hint: "Respect her stake in this.",
-          tag: "kind",
-          goto: "tell_mara",
-          statDeltas: { trust: 3 }
-        },
-        {
-          text: "Secure the evidence before emotions take over",
-          hint: "Stay professional.",
-          tag: "clever",
-          goto: "journal_careful",
-          statDeltas: { courage: 1 }
-        }
-      ]
-    },
+    // ── Endings ─────────────────────────────────────────────────
+    // ending: "good" | "mixed" | "bad"
 
-    "research_together": {
-      chapter: "Act II — The Truth Unravels",
-      icon: "🗂️",
-      heading: "The 2009 Expedition",
-      text: `<p>Three hours of archived radio logs, permit applications, and a redacted government
-             report paint a disturbing picture. A seven-person survey team. Grid 7.
-             A discovery described only as "the cache." Four members never returned.
-             The file was closed by a group called <em>Holloway Environmental Services</em>.</p>
-             <p>Mara pulls up their current registration. "They're still active," she says quietly.
-             "And their regional office is forty miles from here."</p>`,
-      choices: [
-        {
-          text: "Go to Grid 7 armed with this context",
-          hint: "You know the players now.",
-          tag: "clever",
-          goto: "journal_careful",
-          statDeltas: { courage: 2, trust: 1 }
-        },
-        {
-          text: "Report to the authorities first",
-          hint: "This is bigger than the two of you.",
-          tag: "kind",
-          goto: "report_authorities",
-          statDeltas: { trust: 2 }
-        }
-      ]
-    },
-
-    // ── ACT 3 ────────────────────────────────────────────────────
-    "tell_mara": {
-      chapter: "Act III — Resolution",
-      icon: "🤝",
-      heading: "The Truth Between Friends",
-      text: `<p>Mara reads every page, jaw tight. She sets the journal down. "She's alive," she
-             says. "The coordinates in the last entry—I know that place. It's the old forestry
-             shelter, two kilometres north."</p>
-             <p>You find Elara there at dawn: cold, dehydrated, but alive. She'd triggered the
-             beacon manually, hoping someone at the station would hear it.</p>
-             <p>The Holloway group's illegal extraction operation, documented in her field notes,
-             is later investigated by federal authorities. Mara never stops thanking you
-             for not keeping secrets.</p>`,
+    "ending_good": {
+      chapter: "The End",
+      icon: "✨",
+      heading: "A Good Ending",
+      text: `<p>Your good ending text goes here.</p>`,
       choices: [],
       ending: "good",
-      endingNote: "Ending: The Whole Truth — Elara is found. Holloway is exposed. Trust made the difference."
+      endingNote: "Ending: Name — Brief description of this outcome."
     },
 
-    "withhold_entry": {
-      chapter: "Act III — Resolution",
-      icon: "🌫️",
-      heading: "Half a Truth",
-      text: `<p>You share most of what you know. Mara finds the shelter coordinates herself,
-             eventually — but two days later than she might have. Elara survived, barely.</p>
-             <p>When Mara discovers you withheld the final entry, she understands your intent.
-             But understanding isn't the same as forgiveness, and your partnership
-             at the station is never quite the same.</p>`,
+    "ending_bad": {
+      chapter: "The End",
+      icon: "💀",
+      heading: "A Bad Ending",
+      text: `<p>Your bad ending text goes here.</p>`,
       choices: [],
-      ending: "mixed",
-      endingNote: "Ending: Good Intentions — Elara survives, but a friendship is strained by a well-meaning secret."
-    },
-
-    "hide_observe": {
-      chapter: "Act III — Resolution",
-      icon: "👁️",
-      heading: "Shadows and Patience",
-      text: `<p>You kill your torch. Two figures move past without seeing you. You catch fragments:
-             "—signal shouldn't have activated—" and "—find the journal before morning."</p>
-             <p>You photograph them with your phone. Back at the station you cross-reference
-             the faces with Holloway's staff directory. By morning, federal warrants are issued.</p>
-             <p>Elara is found in the forestry shelter — she'd been waiting, hoping exactly
-             this would happen.</p>`,
-      choices: [],
-      ending: "good",
-      endingNote: "Ending: Eyes Open — Patience and observation cracked the case wide open."
-    },
-
-    "call_out": {
-      chapter: "Act III — Resolution",
-      icon: "⚡",
-      heading: "Confrontation",
-      text: `<p>Your voice cuts through the trees. The figures freeze — then run. You chase,
-             trip, lose them. But they drop a radio. Its last transmission gives you their
-             call sign, which Mara traces to a Holloway field team.</p>
-             <p>Your boldness spooked them but also gave you a lead. Elara is found two days
-             later, after an intensive search. She's okay. The Holloway group vanishes
-             across the border before warrants can be issued.</p>`,
-      choices: [],
-      ending: "mixed",
-      endingNote: "Ending: The Loud Approach — Elara is safe, but boldness let the guilty slip away."
-    },
-
-    "report_authorities": {
-      chapter: "Act III — Resolution",
-      icon: "🏛️",
-      heading: "By the Book",
-      text: `<p>The detective on duty listens carefully to your evidence. Within six hours a search
-             party is deployed to Grid 7. Elara is airlifted out by noon.</p>
-             <p>The formal investigation into Holloway takes eighteen months, but it sticks.
-             Seven arrests. The cache — rare mineral deposits mapped illegally — is seized.</p>
-             <p>You and Mara are cited as key witnesses. The signal, it turns out, saved more
-             than one life.</p>`,
-      choices: [],
-      ending: "good",
-      endingNote: "Ending: Due Process — Doing it by the book brought the best outcome for everyone."
+      ending: "bad",
+      endingNote: "Ending: Name — Brief description of this outcome."
     }
+
   }
 };
 </script>
